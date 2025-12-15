@@ -78,11 +78,11 @@ export const ProjectCard = styled.div`
                 0 0 40px rgba(99, 102, 241, 0.15);
   }
 
-  &:hover ${() => ProjectOverlay} {
+  &:hover .project-overlay {
     opacity: 1;
   }
 
-  &:hover ${() => ProjectImage} {
+  &:hover .project-image {
     transform: scale(1.05);
   }
 `;

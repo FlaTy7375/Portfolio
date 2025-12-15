@@ -144,7 +144,7 @@ export const CardIcon = styled.div`
   color: ${props => props.theme.colors.foreground};
   transition: transform 0.3s ease;
 
-  ${ContactCard}:hover & {
+  .contact-card:hover & {
     transform: scale(1.1);
   }
 `;

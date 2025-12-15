@@ -93,8 +93,8 @@ const ProjectCardComponent = ({ project, index, isVisible }) => {
       }}
       data-cursor="pointer"
     >
-      <ProjectImage style={{ background: project.image }} />
-      <ProjectOverlay>
+      <ProjectImage className="project-image" style={{ background: project.image }} />
+      <ProjectOverlay className="project-overlay">
         <ProjectInfo>
           <ProjectTitle>{project.title}</ProjectTitle>
           <ProjectDescription>{project.description}</ProjectDescription>

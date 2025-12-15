@@ -108,6 +108,7 @@ const Contact = () => {
               $delay={index * 0.1}
               $isVisible={isVisible}
               data-cursor="pointer"
+              className="contact-card"
             >
               <CardIcon>{link.icon}</CardIcon>
               <CardTitle>{link.title}</CardTitle>
