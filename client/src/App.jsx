@@ -1,5 +1,5 @@
-import { ThemeProvider } from 'styled-components';
-import { GlobalStyles, theme } from './styles/GlobalStyles';
+import { ThemeProvider } from '@emotion/react';
+import { GlobalStyles, theme } from './styles/GlobalStyles.jsx';
 import CustomCursor from './components/ui/CustomCursor';
 import Navigation from './components/layout/Navigation';
 import Hero from './components/blocks/Hero';

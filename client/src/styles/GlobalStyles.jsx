@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { Global, css } from '@emotion/react';
 
 export const theme = {
   colors: {
@@ -53,7 +53,7 @@ export const theme = {
   },
 };
 
-export const GlobalStyles = createGlobalStyle`
+const globalStyles = css`
   * {
     margin: 0;
     padding: 0;
@@ -66,14 +66,14 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    font-family: ${props => props.theme.fonts.body};
-    background-color: ${props => props.theme.colors.background};
-    color: ${props => props.theme.colors.foreground};
+    font-family: ${theme.fonts.body};
+    background-color: ${theme.colors.background};
+    color: ${theme.colors.foreground};
     line-height: 1.6;
     overflow-x: hidden;
     cursor: none;
     
-    @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    @media (max-width: ${theme.breakpoints.tablet}) {
       cursor: auto;
     }
   }
@@ -83,7 +83,7 @@ export const GlobalStyles = createGlobalStyle`
     text-decoration: none;
     cursor: none;
     
-    @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    @media (max-width: ${theme.breakpoints.tablet}) {
       cursor: pointer;
     }
   }
@@ -94,20 +94,20 @@ export const GlobalStyles = createGlobalStyle`
     background: none;
     font-family: inherit;
     
-    @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    @media (max-width: ${theme.breakpoints.tablet}) {
       cursor: pointer;
     }
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: ${props => props.theme.fonts.display};
+    font-family: ${theme.fonts.display};
     font-weight: 700;
     line-height: 1.2;
   }
 
   ::selection {
-    background: ${props => props.theme.colors.primary};
-    color: ${props => props.theme.colors.foreground};
+    background: ${theme.colors.primary};
+    color: ${theme.colors.foreground};
   }
 
   ::-webkit-scrollbar {
@@ -115,17 +115,19 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   ::-webkit-scrollbar-track {
-    background: ${props => props.theme.colors.background};
+    background: ${theme.colors.background};
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${props => props.theme.colors.primary};
+    background: ${theme.colors.primary};
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: ${props => props.theme.colors.secondary};
+    background: ${theme.colors.secondary};
   }
 `;
+
+export const GlobalStyles = () => <Global styles={globalStyles} />;
 
 export default GlobalStyles;

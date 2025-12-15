@@ -1,4 +1,5 @@
-import styled, { keyframes } from 'styled-components';
+import styled from '@emotion/styled';
+import { keyframes, css } from '@emotion/react';
 
 const pulse = keyframes`
   0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
@@ -37,7 +38,7 @@ export const CursorDot = styled.div`
   transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease;
   box-shadow: 0 0 20px ${props => props.theme.colors.primaryGlow};
 
-  ${props => props.$isClicking && `
+  ${props => props.$isClicking && css`
     transform: translate(-50%, -50%) scale(0.5);
   `}
 `;
@@ -53,7 +54,7 @@ export const CursorRing = styled.div`
   background: ${props => props.$isHovering ? 'rgba(99, 102, 241, 0.1)' : 'transparent'};
   backdrop-filter: ${props => props.$isHovering ? 'blur(4px)' : 'none'};
 
-  ${props => props.$isClicking && `
+  ${props => props.$isClicking && css`
     animation: ${pulse} 0.4s ease-out;
   `}
 `;

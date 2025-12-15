@@ -1,7 +1,4 @@
-import { useRef, useState, useEffect, Suspense } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, MeshDistortMaterial, Sphere, Torus, Icosahedron } from '@react-three/drei';
-import * as THREE from 'three';
+import { useState, useEffect } from 'react';
 import {
   HeroSection,
   HeroContent,
@@ -13,126 +10,100 @@ import {
   ScrollIndicator,
   GradientOverlay,
 } from './styles';
+import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
 
-const AnimatedSphere = ({ mouse }) => {
-  const meshRef = useRef();
+const float1 = keyframes`
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(20px, -30px) rotate(5deg); }
+  50% { transform: translate(-10px, 20px) rotate(-5deg); }
+  75% { transform: translate(15px, 10px) rotate(3deg); }
+`;
+
+const float2 = keyframes`
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(-30px, 20px) rotate(-8deg); }
+  66% { transform: translate(25px, -15px) rotate(6deg); }
+`;
+
+const float3 = keyframes`
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-20px, -20px) scale(1.1); }
+`;
+
+const pulse = keyframes`
+  0%, 100% { opacity: 0.6; box-shadow: 0 0 60px rgba(99, 102, 241, 0.4); }
+  50% { opacity: 0.8; box-shadow: 0 0 100px rgba(99, 102, 241, 0.6); }
+`;
+
+const Shape1 = styled.div`
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  right: 15%;
+  top: 20%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: ${float1} 8s ease-in-out infinite, ${pulse} 4s ease-in-out infinite;
+  filter: blur(40px);
   
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.2 + mouse.y * 0.3;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.3 + mouse.x * 0.3;
-    }
-  });
+  @media (max-width: 768px) {
+    width: 200px;
+    height: 200px;
+    right: 5%;
+  }
+`;
 
-  return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-      <Sphere ref={meshRef} args={[1.5, 64, 64]} position={[0, 0, 0]}>
-        <MeshDistortMaterial
-          color="#6366f1"
-          attach="material"
-          distort={0.4}
-          speed={2}
-          roughness={0.2}
-          metalness={0.8}
-        />
-      </Sphere>
-    </Float>
-  );
-};
-
-const FloatingTorus = ({ mouse }) => {
-  const meshRef = useRef();
+const Shape2 = styled.div`
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  right: 25%;
+  bottom: 30%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: ${float2} 10s ease-in-out infinite;
+  filter: blur(30px);
   
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.5 - mouse.y * 0.2;
-      meshRef.current.rotation.z = state.clock.elapsedTime * 0.3 + mouse.x * 0.2;
-      meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.3;
-    }
-  });
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 150px;
+    right: 10%;
+  }
+`;
 
-  return (
-    <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.5}>
-      <Torus ref={meshRef} args={[2.5, 0.1, 16, 100]} position={[0, 0, -1]}>
-        <meshStandardMaterial
-          color="#8b5cf6"
-          emissive="#8b5cf6"
-          emissiveIntensity={0.3}
-          metalness={0.9}
-          roughness={0.1}
-        />
-      </Torus>
-    </Float>
-  );
-};
-
-const FloatingIcosahedron = ({ mouse }) => {
-  const meshRef = useRef();
+const Shape3 = styled.div`
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: 10%;
+  top: 40%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.25) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: ${float3} 6s ease-in-out infinite;
+  filter: blur(25px);
   
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.4 + mouse.y * 0.4;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.2 - mouse.x * 0.4;
-    }
-  });
+  @media (max-width: 768px) {
+    width: 100px;
+    height: 100px;
+  }
+`;
 
-  return (
-    <Float speed={3} rotationIntensity={0.8} floatIntensity={1.2}>
-      <Icosahedron ref={meshRef} args={[0.8]} position={[3, 1, -2]}>
-        <meshStandardMaterial
-          color="#06b6d4"
-          emissive="#06b6d4"
-          emissiveIntensity={0.5}
-          metalness={0.8}
-          roughness={0.2}
-          wireframe
-        />
-      </Icosahedron>
-    </Float>
-  );
-};
-
-const Scene = ({ mouse }) => {
-  const { camera } = useThree();
-  
-  useFrame(() => {
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouse.x * 0.5, 0.05);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, mouse.y * 0.3, 0.05);
-    camera.lookAt(0, 0, 0);
-  });
-
-  return (
-    <>
-      <ambientLight intensity={0.3} />
-      <directionalLight position={[10, 10, 5]} intensity={1} />
-      <pointLight position={[-10, -10, -5]} intensity={0.5} color="#8b5cf6" />
-      <pointLight position={[10, -5, 5]} intensity={0.3} color="#06b6d4" />
-      
-      <AnimatedSphere mouse={mouse} />
-      <FloatingTorus mouse={mouse} />
-      <FloatingIcosahedron mouse={mouse} />
-    </>
-  );
-};
+const GeometricShapes = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+`;
 
 const Hero = () => {
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [displayText, setDisplayText] = useState('');
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   
-  const words = ['Frontend Developer', 'UI/UX Designer', 'Creative Coder', '3D Enthusiast'];
-  
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMouse({
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: -(e.clientY / window.innerHeight) * 2 + 1,
-      });
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  const words = ['Frontend Developer', 'UI/UX Designer', 'Creative Coder', 'Web Enthusiast'];
 
   useEffect(() => {
     const word = words[currentWordIndex];
@@ -175,29 +146,27 @@ const Hero = () => {
 
   return (
     <HeroSection id="hero">
-      <CanvasWrapper>
-        <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
-          <Suspense fallback={null}>
-            <Scene mouse={mouse} />
-          </Suspense>
-        </Canvas>
-      </CanvasWrapper>
+      <GeometricShapes>
+        <Shape1 />
+        <Shape2 />
+        <Shape3 />
+      </GeometricShapes>
       
       <GradientOverlay />
       
       <HeroContent>
-        <HeroSubtitle>Привет, я</HeroSubtitle>
-        <HeroTitle>
-          Александр
-          <span className="gradient"> Петров</span>
+        <HeroSubtitle data-testid="text-hero-subtitle">Hello, I am</HeroSubtitle>
+        <HeroTitle data-testid="text-hero-title">
+          Alexander
+          <span className="gradient"> Petrov</span>
         </HeroTitle>
         <HeroTagline>
-          <TypewriterText>{displayText}</TypewriterText>
+          <TypewriterText data-testid="text-hero-role">{displayText}</TypewriterText>
           <span className="cursor">|</span>
         </HeroTagline>
       </HeroContent>
       
-      <ScrollIndicator onClick={scrollToAbout} data-cursor="pointer">
+      <ScrollIndicator onClick={scrollToAbout} data-cursor="pointer" data-testid="button-scroll-down">
         <div className="mouse">
           <div className="wheel" />
         </div>
