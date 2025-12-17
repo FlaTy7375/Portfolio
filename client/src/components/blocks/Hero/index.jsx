@@ -9,6 +9,8 @@ import {
   TypewriterText,
   GradientOverlay,
   CanvasWrapper,
+  ScrollOverlay,
+  TouchBlock,
 } from './styles';
 import Scene3D from './Scene3D';
 import styled from '@emotion/styled';
@@ -113,7 +115,7 @@ const Hero = () => {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 1024);
     };
     
     checkMobile();
@@ -179,6 +181,9 @@ const Hero = () => {
           <Scene3D isMobile={isMobile} />
         </Canvas>
       </CanvasWrapper>
+      
+      <ScrollOverlay />
+      <TouchBlock />
       
       <GeometricShapes>
         <Shape1 />

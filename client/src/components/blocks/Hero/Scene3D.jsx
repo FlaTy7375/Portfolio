@@ -159,18 +159,25 @@ function Snake({ isMobile = false }) {
   useFrame(() => {
     if (segmentsRef.current.length === 0) return;
 
+    const time = Date.now() * 0.001;
     let targetX = 0;
     let targetY = 0;
     
-    if (hasMoved && typeof window !== 'undefined' && window.innerWidth > 0) {
-      const multiplier = isMobile ? 5 : 8;
-      const yMultiplier = isMobile ? 4 : 6;
-      targetX = ((x / window.innerWidth) * 2 - 1) * multiplier;
-      targetY = -((y / window.innerHeight) * 2 - 1) * yMultiplier;
+    if (isMobile) {
+      const floatAmount = 1.5;
+      targetX = Math.sin(time * 0.3) * floatAmount;
+      targetY = Math.cos(time * 0.4) * floatAmount;
+    } else {
+      if (hasMoved && typeof window !== 'undefined' && window.innerWidth > 0) {
+        const multiplier = 8;
+        const yMultiplier = 6;
+        targetX = ((x / window.innerWidth) * 2 - 1) * multiplier;
+        targetY = -((y / window.innerHeight) * 2 - 1) * yMultiplier;
+      }
     }
 
     const headTarget = new THREE.Vector3(targetX, targetY, basePosition[2]);
-    targetPositions.current[0].lerp(headTarget, 0.12);
+    targetPositions.current[0].lerp(headTarget, isMobile ? 0.08 : 0.12);
 
     for (let i = 1; i < segmentCount; i++) {
       const prevPos = targetPositions.current[i - 1];
@@ -186,15 +193,14 @@ function Snake({ isMobile = false }) {
       const targetPos = new THREE.Vector3().copy(prevPos)
         .sub(direction.multiplyScalar(segmentSpacing));
       
-      const time = Date.now() * 0.001;
-      const bendAmount = 0.2;
+      const bendAmount = isMobile ? 0.15 : 0.2;
       const bendX = Math.sin(i * 0.8 + time * 0.5) * bendAmount;
       const bendY = Math.cos(i * 0.6 + time * 0.4) * bendAmount;
       
       targetPos.x += bendX;
       targetPos.y += bendY;
       
-      targetPositions.current[i].lerp(targetPos, 0.1);
+      targetPositions.current[i].lerp(targetPos, isMobile ? 0.08 : 0.1);
     }
 
     segmentsRef.current.forEach((segment, i) => {
@@ -244,13 +250,16 @@ function Scene3D({ isMobile = false }) {
       
       <Snake isMobile={isMobile} />
       
-      <OrbitControls
-        enableZoom={false}
-        enablePan={false}
-        autoRotate={false}
-        enableDamping
-        dampingFactor={0.05}
-      />
+      {!isMobile && (
+        <OrbitControls
+          enableZoom={false}
+          enablePan={false}
+          enableRotate={false}
+          autoRotate={false}
+          enableDamping
+          dampingFactor={0.05}
+        />
+      )}
     </>
   );
 }

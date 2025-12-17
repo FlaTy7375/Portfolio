@@ -41,6 +41,7 @@ export const CanvasWrapper = styled.div`
   height: 100%;
   z-index: 1;
   pointer-events: none;
+  touch-action: none;
   
   canvas {
     pointer-events: auto;
@@ -48,22 +49,22 @@ export const CanvasWrapper = styled.div`
     z-index: 1;
     width: 100% !important;
     height: 100% !important;
+    touch-action: auto;
   }
 
-  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
-    opacity: 0.8;
+  @media (max-width: 1024px) {
+    pointer-events: none !important;
+    touch-action: none !important;
+    opacity: 0.7;
     
     canvas {
-      pointer-events: none;
+      pointer-events: none !important;
+      touch-action: none !important;
     }
   }
 
   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
     opacity: 0.6;
-    
-    canvas {
-      pointer-events: none;
-    }
   }
 `;
 
@@ -77,6 +78,42 @@ export const GradientOverlay = styled.div`
   background: radial-gradient(ellipse at 30% 50%, transparent 0%, ${props => props.theme.colors.background} 85%);
   pointer-events: none;
   opacity: 0.3;
+`;
+
+export const ScrollOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: auto;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  display: none;
+  background: transparent;
+
+  @media (max-width: 1024px) {
+    display: block;
+  }
+`;
+
+export const TouchBlock = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: auto;
+  touch-action: pan-y pan-x;
+  -webkit-overflow-scrolling: touch;
+  display: none;
+  background: transparent;
+
+  @media (max-width: 1024px) {
+    display: block;
+  }
 `;
 
 export const HeroContent = styled.div`
