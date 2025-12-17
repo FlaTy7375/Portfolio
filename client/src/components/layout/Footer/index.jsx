@@ -11,7 +11,7 @@ const Footer = () => {
         <FooterContent>
           <Copyright>
             <span className="bracket">&lt;</span>
-            Alex<span className="highlight">Dev</span>
+            Евтух<span className="highlight">Максим</span>
             <span className="bracket">/&gt;</span>
             <span className="year"> {new Date().getFullYear()}</span>
           </Copyright>

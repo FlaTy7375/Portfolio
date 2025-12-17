@@ -17,17 +17,6 @@ const blink = keyframes`
   51%, 100% { opacity: 0; }
 `;
 
-const scrollAnim = keyframes`
-  0% { opacity: 0; transform: translateY(0); }
-  50% { opacity: 1; }
-  100% { opacity: 0; transform: translateY(10px); }
-`;
-
-const float = keyframes`
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-`;
-
 export const HeroSection = styled.section`
   position: relative;
   width: 100%;
@@ -38,6 +27,10 @@ export const HeroSection = styled.section`
   justify-content: flex-start;
   overflow: hidden;
   background: ${props => props.theme.colors.background};
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    height: 70vh;
+  }
 `;
 
 export const CanvasWrapper = styled.div`
@@ -47,6 +40,23 @@ export const CanvasWrapper = styled.div`
   width: 100%;
   height: 100%;
   z-index: 1;
+  pointer-events: none;
+  
+  canvas {
+    pointer-events: auto;
+    position: relative;
+    z-index: 1;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    opacity: 0.8;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    opacity: 0.6;
+  }
 `;
 
 export const GradientOverlay = styled.div`
@@ -55,14 +65,15 @@ export const GradientOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 2;
-  background: radial-gradient(ellipse at 30% 50%, transparent 0%, ${props => props.theme.colors.background} 70%);
+  z-index: 4;
+  background: radial-gradient(ellipse at 30% 50%, transparent 0%, ${props => props.theme.colors.background} 85%);
   pointer-events: none;
+  opacity: 0.3;
 `;
 
 export const HeroContent = styled.div`
   position: relative;
-  z-index: 3;
+  z-index: 5;
   max-width: ${props => props.theme.breakpoints.wide};
   margin: 0 auto;
   padding: 0 ${props => props.theme.spacing.xl};
@@ -92,6 +103,7 @@ export const HeroTitle = styled.h1`
   line-height: 1.1;
   margin-bottom: ${props => props.theme.spacing.lg};
   animation: ${fadeInUp} 0.8s ease-out 0.4s both;
+  margin-left: -4px;
 
   .gradient {
     display: block;
@@ -125,50 +137,4 @@ export const HeroTagline = styled.div`
 export const TypewriterText = styled.span`
   min-height: 1.5em;
   display: inline-block;
-`;
-
-export const ScrollIndicator = styled.button`
-  position: absolute;
-  bottom: ${props => props.theme.spacing.xxl};
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: ${props => props.theme.spacing.sm};
-  color: ${props => props.theme.colors.foregroundTertiary};
-  animation: ${float} 2s ease-in-out infinite;
-  transition: color ${props => props.theme.transitions.fast};
-
-  &:hover {
-    color: ${props => props.theme.colors.primary};
-  }
-
-  .mouse {
-    width: 24px;
-    height: 40px;
-    border: 2px solid currentColor;
-    border-radius: 12px;
-    position: relative;
-  }
-
-  .wheel {
-    width: 4px;
-    height: 8px;
-    background: currentColor;
-    border-radius: 2px;
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    animation: ${scrollAnim} 1.5s infinite;
-  }
-
-  span {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-family: ${props => props.theme.fonts.mono};
-  }
 `;

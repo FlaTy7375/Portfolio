@@ -100,8 +100,10 @@ export const ContactText = styled.p`
 
 export const ContactLinks = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: ${props => props.theme.spacing.lg};
+  max-width: 900px;
+  margin: 0 auto;
 
   @media (max-width: ${props => props.theme.breakpoints.desktop}) {
     grid-template-columns: repeat(2, 1fr);
@@ -124,12 +126,13 @@ export const ContactCard = styled.a`
   text-decoration: none;
   opacity: ${props => props.$isVisible ? 1 : 0};
   animation: ${props => props.$isVisible ? fadeInUp : 'none'} 0.8s ease-out ${props => props.$delay}s both;
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 
   &:hover {
     transform: translateY(-8px);
     border-color: ${props => props.theme.colors.primary};
-    animation: ${pulse} 2s ease-in-out infinite;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    opacity: 1;
   }
 `;
 

@@ -72,18 +72,18 @@ export const ProjectCard = styled.div`
   opacity: ${props => props.$isVisible ? 1 : 0};
   animation: ${props => props.$isVisible ? fadeInUp : 'none'} 0.8s ease-out ${props => props.$delay}s both;
   transform-style: preserve-3d;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 
   &:hover {
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
                 0 0 40px rgba(99, 102, 241, 0.15);
   }
 
-  &:hover .project-overlay {
-    opacity: 1;
-  }
-
   &:hover .project-image {
     transform: scale(1.05);
+    filter: brightness(0.5);
   }
 `;
 
@@ -93,7 +93,9 @@ export const ProjectImage = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  transition: transform 0.6s ease;
+  transition: transform 0.6s ease, filter 0.4s ease;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  filter: brightness(0.6);
 `;
 
 export const ProjectOverlay = styled.div`
@@ -105,18 +107,38 @@ export const ProjectOverlay = styled.div`
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(10, 10, 15, 0.6) 50%,
+    rgba(10, 10, 15, 0.7) 40%,
     rgba(10, 10, 15, 0.95) 100%
   );
   display: flex;
   align-items: flex-end;
   padding: ${props => props.theme.spacing.xl};
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  opacity: 1;
+  transition: background 0.4s ease;
+  overflow: hidden;
+  
+  &:hover {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(10, 10, 15, 0.8) 40%,
+      rgba(10, 10, 15, 0.98) 100%
+    );
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    padding: ${props => props.theme.spacing.md};
+  }
+
+  @media (max-width: 500px) {
+    padding: ${props => props.theme.spacing.sm};
+  }
 `;
 
 export const ProjectInfo = styled.div`
   width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 `;
 
 export const ProjectTitle = styled.h3`
@@ -125,6 +147,17 @@ export const ProjectTitle = styled.h3`
   font-weight: 600;
   color: ${props => props.theme.colors.foreground};
   margin-bottom: ${props => props.theme.spacing.sm};
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    font-size: 1.25rem;
+  }
+
+  @media (max-width: 500px) {
+    font-size: 1.1rem;
+  }
 `;
 
 export const ProjectDescription = styled.p`
@@ -132,6 +165,21 @@ export const ProjectDescription = styled.p`
   color: ${props => props.theme.colors.foregroundSecondary};
   margin-bottom: ${props => props.theme.spacing.md};
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  overflow: hidden;
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 500px) {
+    font-size: 0.8rem;
+    margin-bottom: ${props => props.theme.spacing.sm};
+  }
 `;
 
 export const ProjectTags = styled.div`
@@ -139,6 +187,12 @@ export const ProjectTags = styled.div`
   flex-wrap: wrap;
   gap: ${props => props.theme.spacing.sm};
   margin-bottom: ${props => props.theme.spacing.md};
+  max-width: 100%;
+
+  @media (max-width: 500px) {
+    gap: ${props => props.theme.spacing.xs};
+    margin-bottom: ${props => props.theme.spacing.sm};
+  }
 `;
 
 export const ProjectTag = styled.span`
@@ -149,6 +203,13 @@ export const ProjectTag = styled.span`
   border: 1px solid rgba(99, 102, 241, 0.3);
   border-radius: ${props => props.theme.borderRadius.sm};
   color: ${props => props.theme.colors.primary};
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  @media (max-width: 500px) {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
 `;
 
 export const ProjectLink = styled.a`
@@ -159,6 +220,13 @@ export const ProjectLink = styled.a`
   font-weight: 500;
   color: ${props => props.theme.colors.foreground};
   transition: color ${props => props.theme.transitions.fast};
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  @media (max-width: 500px) {
+    font-size: 0.8rem;
+    gap: ${props => props.theme.spacing.xs};
+  }
 
   &:hover {
     color: ${props => props.theme.colors.primary};
@@ -170,5 +238,6 @@ export const ProjectLink = styled.a`
 
   svg {
     transition: transform ${props => props.theme.transitions.fast};
+    flex-shrink: 0;
   }
 `;

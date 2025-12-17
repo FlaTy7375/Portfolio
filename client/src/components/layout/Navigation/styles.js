@@ -11,6 +11,10 @@ export const NavWrapper = styled.nav`
   backdrop-filter: ${props => props.$isScrolled ? 'blur(20px)' : 'none'};
   border-bottom: 1px solid ${props => props.$isScrolled ? props.theme.colors.cardBorder : 'transparent'};
   transition: all ${props => props.theme.transitions.normal};
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    padding: ${props => props.theme.spacing.sm} 0;
+  }
 `;
 
 export const NavContainer = styled.div`
@@ -21,6 +25,16 @@ export const NavContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 60px;
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    padding: 0 ${props => props.theme.spacing.lg};
+    height: 56px;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    padding: 0 ${props => props.theme.spacing.md};
+    height: 52px;
+  }
 `;
 
 export const Logo = styled.a`
@@ -31,6 +45,8 @@ export const Logo = styled.a`
   display: flex;
   align-items: center;
   gap: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
 
   .bracket {
     color: ${props => props.theme.colors.primary};
@@ -43,12 +59,29 @@ export const Logo = styled.a`
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    font-size: 1.25rem;
+    gap: 1px;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    font-size: 1rem;
+  }
 `;
 
 export const NavLinks = styled.div`
   display: flex;
   align-items: center;
   gap: ${props => props.theme.spacing.xl};
+
+  @media (max-width: 900px) {
+    gap: ${props => props.theme.spacing.lg};
+  }
 
   @media (max-width: ${props => props.theme.breakpoints.tablet}) {
     display: none;
@@ -88,16 +121,25 @@ export const NavLink = styled.a`
 
 export const MobileMenuButton = styled.button`
   display: none;
-  flex-direction: column;
+  position: relative;
   justify-content: center;
   align-items: center;
   width: 40px;
   height: 40px;
-  gap: 6px;
   z-index: 1001;
+  flex-shrink: 0;
+  margin-left: ${props => props.theme.spacing.md};
+  background: transparent;
+  border: none;
+  cursor: pointer;
 
   @media (max-width: ${props => props.theme.breakpoints.tablet}) {
     display: flex;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    width: 36px;
+    height: 36px;
   }
 
   span {
@@ -106,17 +148,36 @@ export const MobileMenuButton = styled.button`
     background: ${props => props.theme.colors.foreground};
     transition: all ${props => props.theme.transitions.fast};
     transform-origin: center;
+    position: absolute;
 
-    &:nth-child(1) {
-      transform: ${props => props.$isOpen ? 'rotate(45deg) translateY(8px)' : 'none'};
+    &:nth-of-type(1) {
+      top: ${props => props.$isOpen ? '50%' : 'calc(50% - 8px)'};
+      transform: ${props => props.$isOpen ? 'translateY(-50%) rotate(45deg)' : 'translateY(-50%) rotate(0deg)'};
     }
 
-    &:nth-child(2) {
+    &:nth-of-type(2) {
+      top: 50%;
+      transform: translateY(-50%);
       opacity: ${props => props.$isOpen ? 0 : 1};
     }
 
-    &:nth-child(3) {
-      transform: ${props => props.$isOpen ? 'rotate(-45deg) translateY(-8px)' : 'none'};
+    &:nth-of-type(3) {
+      top: ${props => props.$isOpen ? '50%' : 'calc(50% + 8px)'};
+      transform: ${props => props.$isOpen ? 'translateY(-50%) rotate(-45deg)' : 'translateY(-50%) rotate(0deg)'};
+    }
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    span {
+      width: 22px;
+
+      &:nth-of-type(1) {
+        top: ${props => props.$isOpen ? '50%' : 'calc(50% - 7px)'};
+      }
+
+      &:nth-of-type(3) {
+        top: ${props => props.$isOpen ? '50%' : 'calc(50% + 7px)'};
+      }
     }
   }
 `;

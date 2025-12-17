@@ -20,65 +20,109 @@ import {
 const projects = [
   {
     id: 1,
-    title: 'E-Commerce Platform',
-    description: 'Современная платформа электронной коммерции с 3D-визуализацией продуктов',
-    image: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    tags: ['React', 'Three.js', 'Node.js'],
-    link: '#',
+    title: 'Yokai Game',
+    description: 'Интерактивное веб-приложение для мониторинга и захвата японских духов (ёкаев) в реальном времени.',
+    image: '/Yokai-Game.png',
+    tags: ['Next.js 16', 'React 19', 'Styled Components', 'TanStack Query', 'Zod'],
+    link: 'https://yokai-game.netlify.app/monitoring',
     size: 'large',
   },
   {
     id: 2,
-    title: 'Crypto Dashboard',
-    description: 'Интерактивная панель для отслеживания криптовалют в реальном времени',
-    image: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    tags: ['Next.js', 'WebSocket', 'Charts'],
-    link: '#',
-    size: 'medium',
+    title: 'Double Systems',
+    description: 'Мультиязычный корпоративный ssr сайт веб-студии с портфолио кейсов, блогом и системой управления контентом для презентации услуг разработки веб-платформ и мобильных приложений.',
+    image: '/Double-Systems.png',
+    tags: ['Next.js 16', 'React 19', 'Styled Components', 'Payload CMS'],
+    link: 'https://doublesystems.netlify.app/ru',
+    size: 'large',
   },
   {
     id: 3,
-    title: 'AI Art Generator',
-    description: 'Веб-приложение для генерации уникальных изображений с помощью AI',
-    image: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    tags: ['React', 'Python', 'ML'],
-    link: '#',
+    title: 'ProKarcher',
+    description: 'Веб-приложение для аренды моющих пылесосов и пароочистителей Karcher в городе Столин. Сайт позволяет пользователям просматривать технику, бронировать ее, а также заказывать услуги химчистки.',
+    image: '/ProKarcher.png',
+    tags: ['React 19', 'Styled Components', 'PostgreSQL', 'Express.js'],
+    link: 'https://karcher-stolin.netlify.app/',
     size: 'medium',
   },
   {
     id: 4,
-    title: 'Social Network',
-    description: 'Социальная платформа нового поколения с продвинутыми функциями',
-    image: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-    tags: ['Next.js', 'GraphQL', 'PostgreSQL'],
-    link: '#',
-    size: 'large',
+    title: 'Cyber Arena',
+    description: 'Современный сайт с анимациями для компьютерного клуба в Москве',
+    image: '/Cyber-Arena.png',
+    tags: ['Next.js 16', 'React 19', 'Styled Components', 'Vite'],
+    link: 'https://cyber-arena-pc.netlify.app/',
+    size: 'medium',
+  },
+  {
+    id: 5,
+    title: 'Atelier Shop',
+    description: 'Современный магазин премиальной одежды, обуви и аксессуаров',
+    image: '/Atelier-Shop.png',
+    tags: ['Next.js 16', 'React 19', 'Styled Components'],
+    link: 'https://atelier-shop.netlify.app/',
+    size: 'medium',
+  },
+  {
+    id: 6,
+    title: 'Ugrushi',
+    description: 'Сайт для отеля в Гродно с интегрированной системой бронирования',
+    image: '/Ugrushi.png',
+    tags: ['JavaScript', 'HTML/CSS', 'Shelter Cloud'],
+    link: 'https://ugrushi.by/',
+    size: 'medium',
   },
 ];
 
 const ProjectCardComponent = ({ project, index, isVisible }) => {
   const cardRef = useRef(null);
   const [transform, setTransform] = useState({ rotateX: 0, rotateY: 0 });
+  const rafRef = useRef(null);
+  const isSafari = useRef(false);
+
+  useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    isSafari.current = /safari/.test(userAgent) && !/chrome/.test(userAgent);
+  }, []);
 
   const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || isSafari.current) return;
     
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    const rotateX = (y - centerY) / 20;
-    const rotateY = (centerX - x) / 20;
-    
-    setTransform({ rotateX, rotateY });
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+    }
+
+    rafRef.current = requestAnimationFrame(() => {
+      if (!cardRef.current) return;
+      
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = (y - centerY) / 20;
+      const rotateY = (centerX - x) / 20;
+      
+      setTransform({ rotateX, rotateY });
+    });
   };
 
   const handleMouseLeave = () => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+    }
     setTransform({ rotateX: 0, rotateY: 0 });
   };
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, []);
 
   return (
     <ProjectCard
@@ -89,11 +133,21 @@ const ProjectCardComponent = ({ project, index, isVisible }) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        transform: `perspective(1000px) rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg)`,
+        transform: isSafari.current 
+          ? 'none' 
+          : `perspective(1000px) rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg)`,
       }}
       data-cursor="pointer"
     >
-      <ProjectImage className="project-image" style={{ background: project.image }} />
+      <ProjectImage 
+        className="project-image" 
+        style={{ 
+          backgroundImage: `url(${project.image})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }} 
+      />
       <ProjectOverlay className="project-overlay">
         <ProjectInfo>
           <ProjectTitle>{project.title}</ProjectTitle>
@@ -103,7 +157,7 @@ const ProjectCardComponent = ({ project, index, isVisible }) => {
               <ProjectTag key={tag}>{tag}</ProjectTag>
             ))}
           </ProjectTags>
-          <ProjectLink href={project.link}>
+          <ProjectLink href={project.link} target="_blank" rel="noopener noreferrer">
             Смотреть проект
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M7 17L17 7M17 7H7M17 7V17" />
@@ -141,7 +195,7 @@ const Projects = () => {
       <ProjectsContainer>
         <SectionHeader $isVisible={isVisible}>
           <SectionLabel>Портфолио</SectionLabel>
-          <SectionTitle>Избранные проекты</SectionTitle>
+          <SectionTitle>Последние проекты</SectionTitle>
         </SectionHeader>
 
         <ProjectsGrid>

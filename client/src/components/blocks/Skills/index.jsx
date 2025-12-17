@@ -5,97 +5,49 @@ import {
   SectionHeader,
   SectionLabel,
   SectionTitle,
-  SkillsGrid,
-  SkillCategory,
-  CategoryTitle,
-  SkillsList,
-  SkillItem,
-  SkillIcon,
-  SkillInfo,
-  SkillName,
-  CircularProgress,
-  CircleBackground,
-  CircleProgress,
-  PercentageText,
+  SkillsCloud,
+  SkillTag,
 } from './styles';
 
-const skillCategories = [
-  {
-    title: 'Frontend',
-    skills: [
-      { name: 'React', level: 95, icon: 'R' },
-      { name: 'TypeScript', level: 90, icon: 'TS' },
-      { name: 'Next.js', level: 88, icon: 'N' },
-      { name: 'Three.js', level: 82, icon: '3D' },
-    ],
-  },
-  {
-    title: 'Backend',
-    skills: [
-      { name: 'Node.js', level: 87, icon: 'N' },
-      { name: 'Python', level: 75, icon: 'Py' },
-      { name: 'PostgreSQL', level: 80, icon: 'DB' },
-      { name: 'GraphQL', level: 78, icon: 'GQ' },
-    ],
-  },
-  {
-    title: 'Design',
-    skills: [
-      { name: 'Figma', level: 92, icon: 'F' },
-      { name: 'UI/UX', level: 88, icon: 'UX' },
-      { name: 'Motion', level: 85, icon: 'M' },
-      { name: 'WebGL', level: 70, icon: 'GL' },
-    ],
-  },
+const skills = [
+  'JavaScript',
+  'HTML',
+  'HTML5',
+  'CSS3',
+  'Git',
+  'React',
+  'CSS',
+  'GitHub',
+  'Figma',
+  'Adobe Photoshop',
+  'BEM',
+  'HTTP',
+  'HTTPS',
+  'TypeScript',
+  'Node.js',
+  'Sass',
+  'Less',
+  'Next.js',
+  'Express.js',
+  'REST API',
+  'PostgreSQL',
+  'Payload CMS',
+  'ES6',
+  'ReactJS',
+  'Webpack',
+  'Vite',
+  'Gulp',
+  'Tailwind',
+  'Three.js',
+  'Styled Components',
+  'Redux',
 ];
-
-const AnimatedCircle = ({ level, isVisible, delay }) => {
-  const [animatedLevel, setAnimatedLevel] = useState(0);
-  const circumference = 2 * Math.PI * 40;
-  
-  useEffect(() => {
-    if (isVisible) {
-      const timer = setTimeout(() => {
-        let current = 0;
-        const increment = level / 30;
-        const interval = setInterval(() => {
-          current += increment;
-          if (current >= level) {
-            current = level;
-            clearInterval(interval);
-          }
-          setAnimatedLevel(Math.round(current));
-        }, 30);
-        return () => clearInterval(interval);
-      }, delay * 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible, level, delay]);
-
-  const strokeDashoffset = circumference - (animatedLevel / 100) * circumference;
-
-  return (
-    <CircularProgress>
-      <svg width="100" height="100" viewBox="0 0 100 100">
-        <CircleBackground cx="50" cy="50" r="40" />
-        <CircleProgress
-          cx="50"
-          cy="50"
-          r="40"
-          style={{
-            strokeDasharray: circumference,
-            strokeDashoffset: isVisible ? strokeDashoffset : circumference,
-          }}
-        />
-      </svg>
-      <PercentageText>{animatedLevel}%</PercentageText>
-    </CircularProgress>
-  );
-};
 
 const Skills = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1920);
   const sectionRef = useRef(null);
+  const tagsRef = useRef([]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -104,7 +56,7 @@ const Skills = () => {
           setIsVisible(true);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
 
     if (sectionRef.current) {
@@ -114,6 +66,82 @@ const Skills = () => {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    let rafId = null;
+
+    const handleMouseMove = (e) => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+
+      rafId = requestAnimationFrame(() => {
+        tagsRef.current.forEach((tag, index) => {
+          if (!tag) return;
+
+          const rect = tag.getBoundingClientRect();
+          const tagCenterX = rect.left + rect.width / 2;
+          const tagCenterY = rect.top + rect.height / 2;
+          
+          const dx = e.clientX - tagCenterX;
+          const dy = e.clientY - tagCenterY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const maxDistance = 150;
+
+          if (distance < maxDistance && !isSafari) {
+            const force = (maxDistance - distance) / maxDistance;
+            const moveX = (dx / distance) * force * 15;
+            const moveY = (dy / distance) * force * 15;
+            
+            tag.style.transform = `translate3d(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px), 0) scale(${1 + force * 0.1})`;
+          } else if (distance >= maxDistance && !isSafari) {
+            tag.style.transform = 'translate3d(-50%, -50%, 0) scale(1)';
+          }
+        });
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
+  }, [isVisible]);
+
+  const getInitialPosition = (index, total) => {
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+    const isSmallMobile = windowWidth <= 500;
+    const isMobile = windowWidth <= 768;
+    const isTablet = windowWidth <= 1024 && windowWidth > 768;
+    let radius;
+    if (isSmallMobile) {
+      radius = Math.sqrt(index / total) * 160;
+    } else if (isMobile) {
+      radius = Math.sqrt(index / total) * 200;
+    } else if (isTablet) {
+      radius = Math.sqrt(index / total) * 300;
+    } else {
+      radius = Math.sqrt(index / total) * 400;
+    }
+    const angle = index * goldenAngle;
+    const x = Math.cos(angle) * radius - 50;
+    const y = Math.sin(angle) * radius;
+    return { x, y };
+  };
+
   return (
     <SkillsSection id="skills" ref={sectionRef}>
       <SkillsContainer>
@@ -122,36 +150,25 @@ const Skills = () => {
           <SectionTitle>Навыки и технологии</SectionTitle>
         </SectionHeader>
 
-        <SkillsGrid>
-          {skillCategories.map((category, categoryIndex) => (
-            <SkillCategory 
-              key={category.title}
-              $delay={categoryIndex * 0.2}
-              $isVisible={isVisible}
-            >
-              <CategoryTitle>{category.title}</CategoryTitle>
-              <SkillsList>
-                {category.skills.map((skill, skillIndex) => (
-                  <SkillItem 
-                    key={skill.name}
-                    $delay={categoryIndex * 0.2 + skillIndex * 0.1}
-                    $isVisible={isVisible}
-                  >
-                    <SkillIcon>{skill.icon}</SkillIcon>
-                    <SkillInfo>
-                      <SkillName>{skill.name}</SkillName>
-                      <AnimatedCircle 
-                        level={skill.level} 
-                        isVisible={isVisible}
-                        delay={categoryIndex * 0.2 + skillIndex * 0.1}
-                      />
-                    </SkillInfo>
-                  </SkillItem>
-                ))}
-              </SkillsList>
-            </SkillCategory>
-          ))}
-        </SkillsGrid>
+        <SkillsCloud>
+          {skills.map((skill, index) => {
+            const initialPos = getInitialPosition(index, skills.length);
+            return (
+              <SkillTag
+                key={skill}
+                ref={(el) => {
+                  if (el) tagsRef.current[index] = el;
+                }}
+                $index={index}
+                $isVisible={isVisible}
+                $initialX={initialPos.x}
+                $initialY={initialPos.y}
+              >
+                {skill}
+              </SkillTag>
+            );
+          })}
+        </SkillsCloud>
       </SkillsContainer>
     </SkillsSection>
   );

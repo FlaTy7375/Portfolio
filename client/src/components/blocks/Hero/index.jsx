@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Canvas } from '@react-three/fiber';
 import {
   HeroSection,
   HeroContent,
@@ -6,10 +7,10 @@ import {
   HeroSubtitle,
   HeroTagline,
   TypewriterText,
-  CanvasWrapper,
-  ScrollIndicator,
   GradientOverlay,
+  CanvasWrapper,
 } from './styles';
+import Scene3D from './Scene3D';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
@@ -42,10 +43,11 @@ const Shape1 = styled.div`
   height: 300px;
   right: 15%;
   top: 20%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
   border-radius: 50%;
   animation: ${float1} 8s ease-in-out infinite, ${pulse} 4s ease-in-out infinite;
   filter: blur(40px);
+  z-index: 1;
   
   @media (max-width: 768px) {
     width: 200px;
@@ -60,10 +62,11 @@ const Shape2 = styled.div`
   height: 200px;
   right: 25%;
   bottom: 30%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
   border-radius: 50%;
   animation: ${float2} 10s ease-in-out infinite;
   filter: blur(30px);
+  z-index: 1;
   
   @media (max-width: 768px) {
     width: 150px;
@@ -78,10 +81,11 @@ const Shape3 = styled.div`
   height: 150px;
   right: 10%;
   top: 40%;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 70%);
   border-radius: 50%;
   animation: ${float3} 6s ease-in-out infinite;
   filter: blur(25px);
+  z-index: 1;
   
   @media (max-width: 768px) {
     width: 100px;
@@ -97,13 +101,25 @@ const GeometricShapes = styled.div`
   height: 100%;
   z-index: 1;
   overflow: hidden;
+  pointer-events: none;
 `;
 
 const Hero = () => {
   const [displayText, setDisplayText] = useState('');
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   
-  const words = ['Frontend Developer', 'UI/UX Designer', 'Creative Coder', 'Web Enthusiast'];
+  const words = ['Frontend Developer', 'React Developer', 'Creative Coder', 'Web Developer'];
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const word = words[currentWordIndex];
@@ -140,12 +156,30 @@ const Hero = () => {
     return () => clearTimeout(timeout);
   }, [currentWordIndex]);
 
-  const scrollToAbout = () => {
-    document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <HeroSection id="hero">
+      <CanvasWrapper>
+        <Canvas
+          gl={{ 
+            antialias: true, 
+            alpha: true,
+            powerPreference: "high-performance",
+            preserveDrawingBuffer: false
+          }}
+          dpr={isMobile ? [1, 1.5] : [1, 2]}
+          style={{ background: 'transparent', zIndex: 10, position: 'relative' }}
+          camera={{ position: [0, 0, isMobile ? 12 : 10], fov: isMobile ? 90 : 100 }}
+          onCreated={(state) => {
+            if (state.gl) {
+              state.gl.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+            }
+          }}
+          onError={() => {}}
+        >
+          <Scene3D isMobile={isMobile} />
+        </Canvas>
+      </CanvasWrapper>
+      
       <GeometricShapes>
         <Shape1 />
         <Shape2 />
@@ -155,23 +189,16 @@ const Hero = () => {
       <GradientOverlay />
       
       <HeroContent>
-        <HeroSubtitle data-testid="text-hero-subtitle">Hello, I am</HeroSubtitle>
-        <HeroTitle data-testid="text-hero-title">
-          Alexander
-          <span className="gradient"> Petrov</span>
+        <HeroSubtitle>Привет, я</HeroSubtitle>
+        <HeroTitle>
+          Евтух
+          <span className="gradient"> Максим</span>
         </HeroTitle>
         <HeroTagline>
-          <TypewriterText data-testid="text-hero-role">{displayText}</TypewriterText>
+          <TypewriterText>{displayText}</TypewriterText>
           <span className="cursor">|</span>
         </HeroTagline>
       </HeroContent>
-      
-      <ScrollIndicator onClick={scrollToAbout} data-cursor="pointer" data-testid="button-scroll-down">
-        <div className="mouse">
-          <div className="wheel" />
-        </div>
-        <span>Scroll Down</span>
-      </ScrollIndicator>
     </HeroSection>
   );
 };

@@ -7,15 +7,23 @@ import {
   AboutTitle,
   AboutText,
   HighlightText,
-  SkillBadges,
-  SkillBadge,
+  SkillsList,
+  SkillItem,
+  SkillName,
+  SkillBar,
+  SkillProgress,
   BackgroundParticles,
   Particle,
 } from './styles';
 
 const skills = [
-  'React', 'TypeScript', 'Three.js', 'Node.js', 
-  'Next.js', 'Styled Components', 'Framer Motion', 'WebGL'
+  { name: 'React', level: 80 },
+  { name: 'JavaScript', level: 75 },
+  { name: 'Next.js', level: 70 },
+  { name: 'HTML', level: 95 },
+  { name: 'Styled Components', level: 80 },
+  { name: 'CSS', level: 90 },
+  { name: 'Git', level: 70 },
 ];
 
 const About = () => {
@@ -74,29 +82,36 @@ const About = () => {
             Создаю <HighlightText>уникальные</HighlightText> цифровые опыты
           </AboutTitle>
           <AboutText>
-            Я — frontend-разработчик с более чем 5-летним опытом создания 
+            Я — frontend-разработчик с 3-летним опытом создания 
             современных веб-приложений. Моя страсть — это объединение 
             <HighlightText> технических инноваций</HighlightText> с 
             <HighlightText> эстетическим дизайном</HighlightText>.
           </AboutText>
           <AboutText>
             Специализируюсь на разработке интерактивных интерфейсов с использованием 
-            React, Three.js и современных анимационных библиотек. Каждый проект — 
+            React, Next.js и современных библиотек. Каждый проект — 
             это возможность создать что-то <HighlightText>запоминающееся</HighlightText>.
           </AboutText>
         </AboutContent>
 
-        <SkillBadges $isVisible={isVisible}>
+        <SkillsList $isVisible={isVisible}>
           {skills.map((skill, index) => (
-            <SkillBadge 
-              key={skill} 
+            <SkillItem 
+              key={skill.name} 
               $delay={index * 0.1}
               $isVisible={isVisible}
             >
-              {skill}
-            </SkillBadge>
+              <SkillName>{skill.name}</SkillName>
+              <SkillBar>
+                <SkillProgress 
+                  $width={skill.level}
+                  $delay={index * 0.1}
+                  $isVisible={isVisible}
+                />
+              </SkillBar>
+            </SkillItem>
           ))}
-        </SkillBadges>
+        </SkillsList>
       </AboutContainer>
     </AboutSection>
   );

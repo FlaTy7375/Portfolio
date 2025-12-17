@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@emotion/react';
 import { GlobalStyles, theme } from './styles/GlobalStyles.jsx';
-import CustomCursor from './components/ui/CustomCursor';
+import CustomCursor from './components/CustomCursor';
 import Navigation from './components/layout/Navigation';
 import Hero from './components/blocks/Hero';
 import About from './components/blocks/About';

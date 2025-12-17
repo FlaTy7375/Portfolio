@@ -50,8 +50,8 @@ const Navigation = () => {
         <NavContainer>
           <Logo data-cursor="pointer">
             <span className="bracket">&lt;</span>
-            Alex
-            <span className="highlight">Dev</span>
+            Евтух
+            <span className="highlight">Максим</span>
             <span className="bracket">/&gt;</span>
           </Logo>
 

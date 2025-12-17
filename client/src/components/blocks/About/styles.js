@@ -41,9 +41,13 @@ export const AboutSection = styled.section`
   position: relative;
   width: 100%;
   min-height: 100vh;
-  padding: ${props => props.theme.spacing.section} 0;
+  padding: 0;
   background: ${props => props.theme.colors.background};
   overflow: hidden;
+
+  @media (max-width: 756px) {
+    padding-bottom: 80px;
+  }
 `;
 
 export const BackgroundParticles = styled.div`
@@ -128,38 +132,55 @@ export const AboutText = styled.p`
   }
 `;
 
-export const SkillBadges = styled.div`
+export const SkillsList = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: ${props => props.theme.spacing.md};
-  justify-content: flex-start;
+  flex-direction: column;
+  gap: ${props => props.theme.spacing.lg};
+  opacity: ${props => props.$isVisible ? 1 : 0};
+  transform: translateY(${props => props.$isVisible ? '0' : '20px'});
+  transition: all 0.8s ease-out;
 
   @media (max-width: ${props => props.theme.breakpoints.desktop}) {
-    justify-content: center;
+    margin-top: ${props => props.theme.spacing.xl};
   }
 `;
 
-export const SkillBadge = styled.span`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.lg};
-  background: ${props => props.theme.colors.cardBackground};
-  border: 1px solid ${props => props.theme.colors.cardBorder};
-  border-radius: ${props => props.theme.borderRadius.full};
+export const SkillItem = styled.div`
+  opacity: ${props => props.$isVisible ? 1 : 0};
+  transform: translateX(${props => props.$isVisible ? '0' : '-20px'});
+  transition: all 0.6s ease-out ${props => props.$delay}s;
+`;
+
+export const SkillName = styled.div`
   font-family: ${props => props.theme.fonts.mono};
   font-size: 0.875rem;
   color: ${props => props.theme.colors.foreground};
-  opacity: ${props => props.$isVisible ? 1 : 0};
-  transform: translateY(${props => props.$isVisible ? '0' : '20px'});
-  transition: all 0.6s ease-out ${props => props.$delay}s, 
-              box-shadow 0.3s ease, 
-              border-color 0.3s ease,
-              transform 0.3s ease;
+  margin-bottom: ${props => props.theme.spacing.xs};
+  font-weight: 500;
+`;
 
-  &:hover {
-    border-color: ${props => props.theme.colors.primary};
-    animation: ${pulse} 1.5s ease-in-out infinite;
-    transform: translateY(-5px);
-  }
+export const SkillBar = styled.div`
+  width: 100%;
+  height: 8px;
+  background: ${props => props.theme.colors.cardBackground};
+  border: 1px solid ${props => props.theme.colors.cardBorder};
+  border-radius: ${props => props.theme.borderRadius.full};
+  overflow: hidden;
+  position: relative;
+`;
+
+export const SkillProgress = styled.div`
+  height: 100%;
+  width: ${props => props.$width}%;
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+  background-size: 200% 100%;
+  border-radius: ${props => props.theme.borderRadius.full};
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1) ${props => props.$delay + 0.3}s;
+  animation: ${shimmer} 3s ease-in-out infinite;
+  
+  ${props => props.$isVisible && `
+    transform: scaleX(1);
+  `}
 `;
