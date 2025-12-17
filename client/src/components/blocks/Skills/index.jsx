@@ -123,16 +123,19 @@ const Skills = () => {
 
   const getInitialPosition = (index, total) => {
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+    const isVerySmall = windowWidth <= 400;
     const isSmallMobile = windowWidth <= 500;
     const isMobile = windowWidth <= 768;
     const isTablet = windowWidth <= 1024 && windowWidth > 768;
     let radius;
-    if (isSmallMobile) {
-      radius = Math.sqrt(index / total) * 160;
+    if (isVerySmall) {
+      radius = Math.sqrt(index / total) * 120;
+    } else if (isSmallMobile) {
+      radius = Math.sqrt(index / total) * 150;
     } else if (isMobile) {
-      radius = Math.sqrt(index / total) * 200;
+      radius = Math.sqrt(index / total) * 180;
     } else if (isTablet) {
-      radius = Math.sqrt(index / total) * 300;
+      radius = Math.sqrt(index / total) * 280;
     } else {
       radius = Math.sqrt(index / total) * 400;
     }

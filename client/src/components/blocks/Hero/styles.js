@@ -52,10 +52,18 @@ export const CanvasWrapper = styled.div`
 
   @media (max-width: ${props => props.theme.breakpoints.tablet}) {
     opacity: 0.8;
+    
+    canvas {
+      pointer-events: none;
+    }
   }
 
   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
     opacity: 0.6;
+    
+    canvas {
+      pointer-events: none;
+    }
   }
 `;
 

@@ -75,6 +75,12 @@ export const ProjectCard = styled.div`
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  max-width: 100%;
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    aspect-ratio: 16/10;
+    transform-style: flat;
+  }
 
   &:hover {
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
@@ -84,6 +90,12 @@ export const ProjectCard = styled.div`
   &:hover .project-image {
     transform: scale(1.05);
     filter: brightness(0.5);
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    &:hover .project-image {
+      transform: none;
+    }
   }
 `;
 
@@ -116,6 +128,7 @@ export const ProjectOverlay = styled.div`
   opacity: 1;
   transition: background 0.4s ease;
   overflow: hidden;
+  box-sizing: border-box;
   
   &:hover {
     background: linear-gradient(
@@ -126,12 +139,32 @@ export const ProjectOverlay = styled.div`
     );
   }
 
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    padding: ${props => props.theme.spacing.lg};
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(10, 10, 15, 0.75) 35%,
+      rgba(10, 10, 15, 0.96) 100%
+    );
+  }
+
   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
     padding: ${props => props.theme.spacing.md};
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(10, 10, 15, 0.8) 30%,
+      rgba(10, 10, 15, 0.97) 100%
+    );
   }
 
   @media (max-width: 500px) {
     padding: ${props => props.theme.spacing.sm};
+  }
+
+  @media (max-width: 400px) {
+    padding: 10px;
   }
 `;
 
@@ -139,6 +172,7 @@ export const ProjectInfo = styled.div`
   width: 100%;
   max-width: 100%;
   overflow: hidden;
+  box-sizing: border-box;
 `;
 
 export const ProjectTitle = styled.h3`
@@ -150,13 +184,25 @@ export const ProjectTitle = styled.h3`
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    font-size: 1.3rem;
+  }
 
   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
+    margin-bottom: 6px;
   }
 
   @media (max-width: 500px) {
-    font-size: 1.1rem;
+    font-size: 1rem;
+  }
+
+  @media (max-width: 400px) {
+    font-size: 0.95rem;
   }
 `;
 
@@ -170,15 +216,31 @@ export const ProjectDescription = styled.p`
   hyphens: auto;
   max-width: 100%;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    font-size: 0.875rem;
+    -webkit-line-clamp: 3;
+  }
 
   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     line-height: 1.4;
+    margin-bottom: ${props => props.theme.spacing.sm};
+    -webkit-line-clamp: 3;
   }
 
   @media (max-width: 500px) {
-    font-size: 0.8rem;
-    margin-bottom: ${props => props.theme.spacing.sm};
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+    -webkit-line-clamp: 2;
+  }
+
+  @media (max-width: 400px) {
+    font-size: 0.7rem;
+    -webkit-line-clamp: 2;
   }
 `;
 
@@ -188,10 +250,25 @@ export const ProjectTags = styled.div`
   gap: ${props => props.theme.spacing.sm};
   margin-bottom: ${props => props.theme.spacing.md};
   max-width: 100%;
+  overflow: hidden;
 
-  @media (max-width: 500px) {
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    gap: 6px;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
     gap: ${props => props.theme.spacing.xs};
     margin-bottom: ${props => props.theme.spacing.sm};
+  }
+
+  @media (max-width: 500px) {
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  @media (max-width: 400px) {
+    gap: 3px;
+    margin-bottom: 6px;
   }
 `;
 
@@ -205,10 +282,28 @@ export const ProjectTag = styled.span`
   color: ${props => props.theme.colors.primary};
   white-space: nowrap;
   flex-shrink: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    font-size: 0.7rem;
+    padding: 5px 10px;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
 
   @media (max-width: 500px) {
-    font-size: 0.7rem;
-    padding: 4px 8px;
+    font-size: 0.6rem;
+    padding: 3px 6px;
+  }
+
+  @media (max-width: 400px) {
+    font-size: 0.55rem;
+    padding: 2px 5px;
   }
 `;
 
@@ -222,10 +317,25 @@ export const ProjectLink = styled.a`
   transition: color ${props => props.theme.transitions.fast};
   white-space: nowrap;
   flex-shrink: 0;
+  max-width: 100%;
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    font-size: 0.75rem;
+    gap: 6px;
+  }
 
   @media (max-width: 500px) {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     gap: ${props => props.theme.spacing.xs};
+  }
+
+  @media (max-width: 400px) {
+    font-size: 0.65rem;
+    gap: 4px;
   }
 
   &:hover {
@@ -239,5 +349,17 @@ export const ProjectLink = styled.a`
   svg {
     transition: transform ${props => props.theme.transitions.fast};
     flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+
+    @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+      width: 12px;
+      height: 12px;
+    }
+
+    @media (max-width: 400px) {
+      width: 10px;
+      height: 10px;
+    }
   }
 `;

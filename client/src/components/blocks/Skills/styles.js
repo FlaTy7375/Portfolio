@@ -40,9 +40,19 @@ export const SkillsSection = styled.section`
   display: flex;
   align-items: center;
 
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    padding: ${props => props.theme.spacing.xxl} 0;
+    min-height: 80vh;
+  }
+
   @media (max-width: 756px) {
-    padding: 0px;
+    padding: ${props => props.theme.spacing.xl} 0;
     min-height: 70vh;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    padding: ${props => props.theme.spacing.lg} 0;
+    min-height: 60vh;
   }
 `;
 
@@ -53,9 +63,19 @@ export const SkillsContainer = styled.div`
   max-width: ${props => props.theme.breakpoints.wide};
   margin: 0 auto;
   padding: 0 ${props => props.theme.spacing.xl};
+  overflow: hidden;
+  box-sizing: border-box;
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    padding: 0 ${props => props.theme.spacing.lg};
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    padding: 0 ${props => props.theme.spacing.md};
+  }
 
   @media (max-width: 500px) {
-    padding: 0 ${props => props.theme.spacing.md};
+    padding: 0 ${props => props.theme.spacing.sm};
   }
 `;
 
@@ -93,17 +113,22 @@ export const SkillsCloud = styled.div`
   justify-content: center;
   perspective: 1000px;
   overflow: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
 
   @media (max-width: ${props => props.theme.breakpoints.tablet}) {
     min-height: 500px;
+    padding: 0 ${props => props.theme.spacing.md};
   }
 
   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
     min-height: 400px;
+    padding: 0 ${props => props.theme.spacing.sm};
   }
 
   @media (max-width: 500px) {
     min-height: 350px;
+    padding: 0;
   }
 `;
 
@@ -134,6 +159,10 @@ export const SkillTag = styled.span`
   animation: ${props => props.$isVisible ? fadeIn : 'none'} 0.6s ease-out ${props => props.$index * 0.05}s both,
              ${float} ${props => 3 + (props.$index % 3)}s ease-in-out infinite;
   animation-delay: ${props => props.$index * 0.05}s, ${props => props.$index * 0.2}s;
+  max-width: calc(100vw - 40px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
 
   &:hover {
     background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
@@ -147,16 +176,24 @@ export const SkillTag = styled.span`
   @media (max-width: ${props => props.theme.breakpoints.tablet}) {
     font-size: 0.7rem;
     padding: ${props => props.theme.spacing.xs} ${props => props.theme.spacing.sm};
+    max-width: calc(100vw - 60px);
   }
 
   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
     font-size: 0.65rem;
     padding: 6px 10px;
+    max-width: calc(100vw - 40px);
   }
 
   @media (max-width: 500px) {
     font-size: 0.6rem;
     padding: 5px 8px;
     max-width: calc(100vw - 32px);
+  }
+
+  @media (max-width: 400px) {
+    font-size: 0.55rem;
+    padding: 4px 6px;
+    max-width: calc(100vw - 24px);
   }
 `;
